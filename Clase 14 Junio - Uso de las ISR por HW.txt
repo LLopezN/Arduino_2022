@@ -1,0 +1,55 @@
+/*
+Fundacion Kinal
+Centro educativo tecnico laboral Kinal
+Electronica jornada Vespertina
+Taller de electronica digital y reparacion de computadoras I
+Alumno: Profe. Alejandro
+Tema: Interrupciones
+*/
+
+//**********************MACROS****************************
+#define push_isr_falling  3  //Push button conectado al pin 3 como pullup
+#define push_isr_rising   2  //Push button conectado al pin 2 como pulldown
+#define led_red_falling   4  //Led rojo conectado para ver el estado de la isr en modo falling 
+#define led_green_rising  5  //led verde conectado para ver el estado de la isr en modo rising
+
+
+volatile bool state_isr_falling = LOW; //LOW = 0 = false
+volatile bool state_isr_rising = LOW; 
+
+void setup() 
+{
+	Serial.begin(9600);  //Inicio la comunicacion serial a 9600 baudios.
+	pinMode(push_isr_rising, INPUT);    //Pin2 como entrada.
+	pinMode(push_isr_falling, INPUT);   //Pin3 como entrada. 
+	pinMode(led_red_falling, OUTPUT);   //Pin4 como salida.
+	pinMode(led_green_rising, OUTPUT); //Pin5 como salida.
+
+	attachInterrupt(digitalPinToInterrupt(push_isr_falling), ISR_falling, FALLING);
+	attachInterrupt(digitalPinToInterrupt(push_isr_rising), ISR_rising, RISING);
+
+	Serial.print("Hola, este es el ejemplo de Interrupciones");
+
+}
+
+void loop() 
+{
+
+}
+
+asdf
+
+//*********************ISR*****************************
+void ISR_falling(void)
+{
+	state_isr_falling = !state_isr_falling; 
+	digitalWrite(led_red_falling, state_isr_falling);
+	Serial.println("Hola, este mensaje es enviado desde la ISR de Falling");
+}
+
+void ISR_rising(void)
+{
+	state_isr_rising = !state_isr_rising;
+	digitalWrite(led_green_rising, state_isr_rising);
+	Serial.println("Hola, este mensaje es enviado desde la ISR de Rising");
+}

@@ -1,0 +1,302 @@
+/*
+Fundacion Kinal
+Centro educativo tecnico laboral Kinal
+Electronica jornada Vespertina
+Taller de electronica digital y reparacion de computadoras I
+Alumno: Profe. Alejandro
+Tema: NeoPixels
+*/
+
+enum Colores
+{
+	rojo,
+	azul,
+	verde,
+	naranja,
+	morado, 
+	negro,
+	blanco,
+};
+
+enum direccion
+{
+	ascendente, 
+	descendente
+};
+
+/*enumera una palabra como si fuera un tipo de dato entero
+rojo = 1
+azul = 2
+.
+.
+.
+blanco =7 
+*/
+
+
+//**********************MACROS****************************
+#define pin_ring_leds      2   //Pin del arduino donde conecte mi anillo de leds
+#define ring_leds_length   12  //La cantidad de leds que tiene mi anillo de leds
+
+
+//**********************BIBLIOTECAS************************
+#include <Adafruit_NeoPixel.h>
+
+
+
+//**********************CONSTRUCTORES**********************
+Adafruit_NeoPixel ring_leds(ring_leds_length,pin_ring_leds,NEO_GRB+NEO_KHZ800);
+
+
+//********************PROTOTIPOS DE FUNCIONES***********************
+void setColor(int color);  //Funcion que recibe el color como parametro, y no devuelve ningun dato
+void setColor(int color, long time_delay); //Funcion que recibe el color y un tiempo, no devuelve ningun dato
+void setColor(int color, long time_delay, int direccion); //Funcion recibe el color, tiempo de encendido entre leds y la direccion en la que enciende
+
+void setup()
+{
+	ring_leds.begin();   //Inicio la comunicacion con el anillo de leds
+	//ring_leds.setPixelColor(0,255,0,0);	
+	//ring_leds.show();
+}
+
+
+void loop()
+{
+	/*
+	setColor(rojo);
+	delay(100);
+	setColor(azul);
+	delay(100);
+	setColor(verde);
+	delay(100);
+	setColor(naranja);
+	delay(100);
+	setColor(morado);
+	delay(100);
+	setColor(negro);
+	delay(100);
+	setColor(blanco);
+	delay(100);*/
+
+
+	/*
+	setColor(rojo,2000);
+	setColor(morado, 150);
+	setColor(azul, 1000);
+	setColor(verde, 500);
+	*/
+
+	setColor(rojo,150,ascendente);
+	setColor(azul,150,descendente);
+
+}
+
+
+
+//*************************FUNCIONES***********************
+void setColor(int color)
+{
+	switch (color) 
+	{
+		case(rojo):
+		{
+			for(int i =0; i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,255,0,0);
+				ring_leds.show();
+			}
+			break;
+		}
+
+		case(azul):
+		{
+			for(int i =0; i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,25,25,112);
+				ring_leds.show();
+			}
+			break;
+
+		}
+
+		case(verde):
+		{
+			for(int i =0; i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,0,100,0);
+				ring_leds.show();
+			}
+			break;
+
+		}
+
+		case(naranja):
+		{
+			for(int i =0; i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,255,99,71);
+				ring_leds.show();
+			}
+			break;
+
+		}
+
+		case(morado):
+		{
+			for(int i =0; i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,75,0,130);
+				ring_leds.show();
+			}
+			break;
+
+		}
+
+		case(negro):
+		{
+			for(int i =0; i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,0,0,0);
+				ring_leds.show();
+			}
+			break;
+
+		}
+
+		case(blanco):
+		{
+			for(int i =0; i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,255,255,255);
+				ring_leds.show();
+			}
+			break;
+
+		}
+	}
+}
+
+void setColor(int color, long time_delay)
+{
+	switch (color) 
+	{
+		case(rojo):
+		{
+			for(int i=0;i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,255,0,0);
+				delay(time_delay);
+				ring_leds.show();
+			}
+			break;
+		}
+
+		case(verde):
+		{
+			for(int i=0;i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,255,0,0);
+				delay(time_delay);
+				ring_leds.show();
+			}
+			break;
+		}
+
+		case(azul):
+		{
+			for(int i=0;i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,255,0,0);
+				delay(time_delay);
+				ring_leds.show();
+			}
+			break;
+		}
+
+		case(naranja):
+		{
+			for(int i=0;i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,255,99,71);
+				delay(time_delay);
+				ring_leds.show();
+			}
+			break;
+		}
+
+		case(morado):
+		{
+			for(int i=0;i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,75,0,130);
+				delay(time_delay);
+				ring_leds.show();
+			}
+			break;
+		}
+
+		case(blanco):
+		{
+			for(int i=0;i<=ring_leds_length;i++)
+			{
+				ring_leds.setPixelColor(i,128,128,128);
+				delay(time_delay);
+				ring_leds.show();
+			}
+			break;
+		}
+	}
+}
+
+void setColor(int color, long time_delay, int direccion)
+{
+	switch (color)
+	{
+		case(rojo):
+		{
+			if(direccion == ascendente)
+			{
+				for(int i=0;i<=ring_leds_length;i++)
+				{
+					ring_leds.setPixelColor(i,255,0,0);
+					delay(time_delay);
+					ring_leds.show();
+				}
+			}
+			else
+			{
+				for(int i=ring_leds_length;i>=0;i--)
+				{
+					ring_leds.setPixelColor(i,255,0,0);
+					delay(time_delay);
+					ring_leds.show();
+				}
+			}
+			break;
+		}
+
+		case(azul):
+		{
+			if(direccion == ascendente)
+			{
+				for(int i=0;i<=ring_leds_length;i++)
+				{
+					ring_leds.setPixelColor(i,0,0,255);
+					delay(time_delay);
+					ring_leds.show();
+				}
+			}
+			else
+			{
+				for(int i=ring_leds_length;i>=0;i--)
+				{
+					ring_leds.setPixelColor(i,0,0,255);
+					delay(time_delay);
+					ring_leds.show();
+				}
+			}
+			break;
+		}
+	}
+}
