@@ -1,0 +1,85 @@
+/*
+Fundacion Kinal
+Centro educativo técnico laboral Kinal
+Electronica jornada matutina
+Taller de electronica digital y reparación de computadoras I
+Alumno: Profe. Alejandro
+Carnet: ------
+Proyecto: Sensor de temperatura y humedad DHT11
+*/
+
+
+//************************ENUM********************************
+enum dimensionales_Temperatura
+{
+	centigrado,
+	farenheit
+};
+
+//*************************LIBRERIAS**************************
+#include <DHT.h>         //Libreria que me permite utilizar el sensor DHT11
+#include <DHT_U.h>		 //Libreria que me permite utilizar el sensor DHT11
+
+//*************************MACROS*****************************
+#define pin_DHT11 2 		  	//Sensor DHT11 conectado al pin2 del arduino
+#define Serial_Baudrate 19200	//Baudrate de la comunicacion serial
+
+//*************************PROTOTIPOS*************************
+float leo_temperatura(int dimensional);   //Una funcion que devuelve la temperatura, segun la dimension que le pase entre los parentesis
+
+//*************************VARIABLES**************************
+
+
+//***********************CONSTRUCTORES************************
+DHT SensorDHT11(pin_DHT11, DHT11);   //Objeto del sensor DHT11 conectado al pin2
+
+void setup()
+{
+	Serial.begin(Serial_Baudrate);  //Inicio la comunicacion a 19200
+	SensorDHT11.begin();   			//Inicio la comunicacion con el sensor DHT11
+}
+
+void loop()
+{
+	delay(5000);  //Espera de 5 segundos
+    Serial.print("La temperatura en grados centigrados es: ");    //Imprimo el mensaje
+    Serial.println(leo_temperatura(centigrados));  //Imprimo el valor leido por el sensor
+    float temperatura_SensorDHT11_1 = leo_temperatura(farenheit);  //guardo en una variable la temperatura pero en grados farenheit
+    Serial.print("La temperatura en grados farenheit es: "); //Imprimo el mensaje
+    Serial.println(temperatura_SensorDHT11_1);           //Imprimo el valor leido por el sensor 
+
+    float humedad_SensorDHT11 = readHumidity();  //Leo la humedad relativa captada por el sensor
+    Serial.print("La humedad relativa es de: ");  //Imprimo el mensaje
+    Serial.println(humedad_SensorDHT11);  //Imprimo el valor leido por el sensor
+}
+
+
+
+
+//*************************FUNCIONES**************************
+
+/*
+Funcion que me permite leer la temperatura, segun la dimensional que escriba entre sus
+parentesis
+*/
+float leo_temperatura(int dimensional)
+{
+	float temperatura;
+
+	switch (dimensional) 
+	{
+		case(centigrados):
+		{
+			temperatura = SensorDHT11.readTemperature();
+			return temperatura;
+			break;
+		}
+
+		case(farenheit):
+		{
+			temperatura = SensorDHT11.readTemperature(true);
+			return temperatura;
+			break;
+		}
+	}
+}

@@ -1,0 +1,51 @@
+/*
+Fundacion Kinal
+Centro educativo técnico laboral Kinal
+Electronica jornada matutina
+Taller de electronica digital y reparación de computadoras I
+Alumno: Profe. Alejandro
+Carnet: ------
+Proyecto: Sensor de gas MQ2
+*/
+
+//********************MACROS*************************
+#define pin_SensorMQ2    A0      //Sensor de gas conectado al pin A0
+#define serial_Baudrate  19200    //Baudrate de la comunicacion serial
+
+
+//*******************FUNCIONES***********************
+byte lectura_concentracion_gas(byte pin_del_sensor);   //Funcion que devuelve el valor de la concentracion de gas, en un pin donde tenga conectado mi sensor
+
+//*******************VARIABLES***********************
+unsigned int valor_raw_sensor;   //variable donde voy a almacenar el valor en bruto del sensor (0 - 1023)
+byte concentracion_gas =0;       //variable donde voy a almacenar un valor linealizado de los valores en bruto del sensor (0% - 100%)
+
+
+
+void setup()
+{
+	Serial.begin(serial_Baudrate);  //Inicio la comunicacion serial
+	Serial.println("Ejemplo del uso del sensor de gas MQ2");
+	pinMode(pin_SensorMQ2, INPUT);        //A0 como entrada	
+}
+
+void loop()
+{
+	concentracion_gas = lectura_concentracion_gas(pin_SensorMQ2);
+	Serial.print("La concentracion de gas es de: ");
+	Serial.print(concentracion_gas);
+	Serial.println("%");
+
+	delay(1000);
+}
+
+
+
+//*******************FUNCIONES***********************
+byte lectura_concentracion_gas(byte pin_del_sensor)
+{
+	int raw_sensor = analogRead(pin_del_sensor);
+	byte concentracion = map(raw_sensor, 487, 872, 0, 100);
+
+	return concentracion;
+}

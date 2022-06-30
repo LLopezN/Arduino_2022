@@ -1,0 +1,89 @@
+/*
+Fundacion Kinal
+Centro educativo técnico laboral Kinal
+Electronica jornada matutina
+Taller de electronica digital y reparación de computadoras I
+Alumno: Profe. Alejandro
+Carnet: ------
+Proyecto: Interrupciones por medio del timer, usando la libreria de Ticker
+*/
+
+//*******************LIBRERIAS******************
+#include <Ticker.h>  //Libreria que me permite hacer uso de las interrupciones por timer
+
+
+//*******************MACROS*********************
+#define led_rojo      2  //Un led rojo conectado al pin2 del arduino
+#define led_amarillo  3  //Un led amarillo conectado al pin3 del arduino
+#define led_azul      4  //Un led azul conectado al pin4 del arduino
+
+//******************PROTOTIPOS******************
+//El led rojo parpadea a 5 Hertz.
+//El led amarillo parpadea a 10 Hertz
+//El led azul parpadea a 15 Hertz
+
+void ledRojo_parpadeo5Hz(void);       //Funcion que no tiene valor de retorno ni posee argumentos
+void ledAmarillo_parpadeo10Hz(void);
+void ledAzul_parpadeo15Hz(void); 
+
+//******************VARIABLES*******************
+volatile bool estado_led_rojo = LOW;       //Variable que determina el estado del led, inicia en bajo (apagado)
+volatile bool estado_led_amarillo = LOW;   //Variable que determina el estado del led, inicia en bajo (apagado)
+volatile bool estado_led_azul = LOW;       //Variable que determina el estado del led, inicia en bajo (apagado)
+
+
+//*****************CONSTRUCTORES****************
+Ticker interrupcion_ledRojo(ledRojo_parpadeo5Hz, 200);  //La interrupcion para el led rojo, se va a disparar cada 200ms
+Ticker interrupcion_ledAmarillo(ledAmarillo_parpadeo10Hz, 100); //La interrupcion para el led amarillo, se va a disparar cada 100ms
+Ticker interrupciones_ledAzul(ledAzul_parpadeo15Hz, 67);   //La interrupcion para el led azul, se va a disparar cada 67ms
+
+void setup()
+{
+	Serial.begin(19200);   //Inicio la comunicacion serial
+	Serial.println("Uso de las interrupciones por timer");
+	for(int i = 2; i<5; i++)
+	{
+		pinMode(i, OUTPUT);    //Del pin2 al pin4 como salida( los pines asociados a los leds)
+	}
+
+	for(int i = 2; i<5;i++)
+	{
+		digitalWrite(i, LOW);   //Del pin2 al pin4 inician en bajo.
+	}
+
+	interrupcion_ledRojo.start();  //Inico mi interrupcion para el led rojo
+	interrupcion_ledAmarillo.start(); //Inicio mi interrupcion para el led amarillo
+	interrupciones_ledAzul.start(); //Inicio mi interrupcion para el led azul
+
+}
+
+
+void loop()
+{
+	interrupcion_ledRojo.update();  
+	interrupcion_ledAmarillo.update(); 
+	interrupciones_ledAzul.update(); 
+	
+}
+
+
+
+
+//******************FUNCIONES******************
+void ledRojo_parpadeo5Hz(void)
+{
+	estado_led_rojo = !estado_led_rojo;
+	digitalWrite(led_rojo, estado_led_rojo);
+}
+
+void ledAmarillo_parpadeo10Hz(void)
+{
+	estado_led_amarillo = !estado_led_amarillo;
+	digitalWrite(led_amarillo, estado_led_amarillo);
+}
+
+void ledAzul_parpadeo15Hz(void)
+{
+	estado_led_azul = !estado_led_azul;
+	digitalWrite(led_azul, estado_led_azul);
+}

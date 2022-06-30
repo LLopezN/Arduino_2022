@@ -1,0 +1,45 @@
+/*
+Fundacion Kinal
+Centro educativo técnico laboral Kinal
+Electronica jornada matutina
+Taller de electronica digital y reparación de computadoras I
+Alumno: Profe. Alejandro
+Carnet: ------
+Proyecto: Sensor de temperatura y humedad DHT11
+*/
+
+//*************************LIBRERIAS**************************
+#include <DHT.h>         //Libreria que me permite utilizar el sensor DHT11
+#include <DHT_U.h>		 //Libreria que me permite utilizar el sensor DHT11
+
+//*************************MACROS*****************************
+#define pin_DHT11 2 		  	//Sensor DHT11 conectado al pin2 del arduino
+#define Serial_Baudrate 19200	//Baudrate de la comunicacion serial
+
+//*************************FUNCIONES**************************
+
+
+//*************************VARIABLES**************************
+
+
+//***********************CONSTRUCTORES************************
+DHT SensorDHT11(pin_DHT11, DHT11);   //Objeto del sensor DHT11 conectado al pin2
+
+void setup()
+{
+	Serial.begin(Serial_Baudrate);  //Inicio la comunicacion a 19200
+	SensorDHT11.begin();   			//Inicio la comunicacion con el sensor DHT11
+}
+
+void loop()
+{
+	delay(5000);  //Espero 5 segundos
+
+	float temperatura_sensorDHT11 = SensorDHT11.readTemperature(); //Me devuelve la temperatura en grados centigrados
+	Serial.print("La temperatura en grados centirados es: ");
+	Serial.println(temperatura_sensorDHT11);
+	float temperatura_sensorDHT11 = SensorDHT11.readTemperature(true); //Me devuelve la temperatura en grados Farenheit
+	Serial.print("La temperatura en grados Farenheit es: ");
+	Serial.println(temperatura_sensorDHT11);
+	
+}
