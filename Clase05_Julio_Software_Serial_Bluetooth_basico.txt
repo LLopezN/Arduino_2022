@@ -1,0 +1,34 @@
+/*
+Fundacion Kinal
+Centro educativo tecnico laboral Kinal
+Electronica jornada matutina
+Taller de electronica digital y reparacion de computadoras
+Alumno: Profe Alejandro
+Carne:  ------
+Tema: Software Serial y Bluetooth
+*/
+//**********MACROS*******************
+#define rx_SoftSerial  7    //Pin7 donde conecte el pin RX del modulo HC05
+#define tx_SoftSerial  6    //Pin6 donde conecte el pin TX del modulo HC05
+#define Serial_baud   9600  //Velocidad de la comunicacion serie
+
+//**********LIBRERIA*******************
+#include <SoftwareSerial.h>  //Libreria que me permite emular un puerto serie
+
+//**********CONSTRUCTOR*******************
+SoftwareSerial Serial_BT(rx_SoftSerial, tx_SoftSerial);  //Cree el objeto que me permite hacer uso de "el puerto serie extra"
+
+
+void setup()
+{
+	Serial.begin(Serial_baud);  //Inicio la comunicacion serie (propia del arduino Pin0 y Pin1)
+	Serial_BT.begin(Serial_baud);  //Inicio la comunicacion serie con el modulo BT
+	Serial.println("Prueba de puertos serie");  //Enviar al monitor serie de Arduino
+	Serial_BT.println("Envio mediante BT");   //Enviar por medio de BT
+}
+
+
+void loop()
+{
+	
+}

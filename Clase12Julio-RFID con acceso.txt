@@ -1,0 +1,107 @@
+/*
+ Fundacion Kinal 
+ Centro educativo tecnico laboral Kinal
+ Electronica jornada matutina
+ Taller de electronica digital y reparacion de computadoras
+ Alumno: Profe Alejandro
+ Carne: -------
+ Tema: RFID para sistema de acceso
+ */
+
+//***********************LIBRERIAS*************************
+#include <SPI.h>		//Libreria que me permite hacer uso de la comunicacion SPI
+#include <MFRC522.h>	//Libreria que me permite hacer uso del lector RFID MFRC522
+
+
+//*************************MACROS**************************
+#define Reset_pin		9		//Pin9 del arduino, conectado al pin RST del modulo RFID
+#define SDA_pin    		10		//Pin10 del arduino, conectado al pin SDA del modulo RFID. OJO no es el pin SDA de la comunicacion LiquidCrystal_I2C
+#define Serial_baud		9600	//Velocidad de la comunicacion serial
+
+
+//***********************CONSTRUCTORES*********************
+MFRC522 lector_RFID(SDA_pin, Reset_pin); //Objeto del modulo RFID. 
+
+//***********************VARIABLES*************************
+byte uid_que_estoy_leyendo[4];    //Array donde almaceno el UID de la tarjeta que acerco al lector RFID
+byte tag_Blanco[4] = {0xA3,0x3F,0x20,0x1A};   //UID del tag blanco
+byte tag_Azul[4] = {0xC9,0x20,0x70,0x48};  	  //UID del tag azul
+
+//**********************PROTOTIPOS*************************
+/*
+Funcion que devuelve true o false, segun la comparacion
+de la informacion de cada uid
+*/
+bool comparacion_UID(byte uid_externo[], byte uid_referencia[]);
+
+void setup()
+{
+	Serial.begin(Serial_baud); 		//Inicio la comunicacion serial a 9600 baudios.
+	SPI.begin();        			//Inicio la comunicacion SPI.
+	lector_RFID.PCD_Init();			//Iniciamos el intercambio de informacion con el modulo RFID conectado al arduino
+	Serial.println("Clase 12 de Julio, Uso del modulo RFID");  //Envio el mensaje a la terminal serial
+	
+}
+
+
+void loop()
+{
+	if(lector_RFID.PICC_IsNewCardPresent())  //Hay alguna tag RFID cerca del modulo?
+	{
+		if(lector_RFID.PICC_ReadCardSerial())  //Leo la informacion que esta contenida dentro del tag
+		{
+			//Serial.print(" UID del tag es: ");  //Envio el mensaje a la terminal serial
+
+			for(byte i =0; i<lector_RFID.uid.size; i++)
+			{
+				//Serial.print(lector_RFID.uid.uidByte[i] < 0x10 ? " 0 ": " ");
+				//Serial.print(lector_RFID.uid.uidByte[i], HEX);   //Muestro en la terminal serial, la informacion en formato hexadecimal
+				uid_que_estoy_leyendo[i] = lector_RFID.uid.uidByte[i];   //Guardo byte por byte
+			}
+
+
+			Serial.println();
+
+			if(comparacion_UID(uid_que_estoy_leyendo, tag_Blanco))
+			{
+				Serial.println("El tag blanco si tiene acceso");
+			}
+			else
+			{
+				Serial.println("El tago azul no tiene acceso");
+			}
+			lector_RFID.PICC_HaltA();   //Termino la comunicacion con la tarjeta
+
+		}
+	}
+	
+}
+
+
+bool comparacion_UID(byte uid_externo[], byte uid_referencia[])
+{
+	//Comparo los 4 bytes de informacion de cada tarjeta
+
+	if(uid_externo[0] != uid_referencia[0])
+	{
+		return false;
+	}
+
+	if(uid_externo[1] != uid_referencia[1])
+	{
+		return false;
+	}
+
+	if(uid_externo[2] != uid_referencia[2])
+	{
+		return false;
+	}
+
+	if(uid_externo[3] != uid_referencia[3])
+	{
+		return false;
+	}
+
+	return true;
+
+}

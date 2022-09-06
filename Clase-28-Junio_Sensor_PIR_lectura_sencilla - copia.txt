@@ -1,0 +1,43 @@
+/*
+Fundacion Kinal
+Centro educativo técnico laboral Kinal
+Electronica jornada matutina
+Taller de electronica digital y reparación de computadoras I
+Alumno: Profe. Alejandro
+Carnet: ------
+Proyecto: Sensor de movimiento PIR
+*/
+
+//**********************MACROS***********************
+#define pin_SensorPIR 3 		//sensor Pir conectado al pin3 
+#define serial_Baudrate 19200   //Baudrate de la comunicacion serial
+
+
+//**********************VARIABLE*********************
+bool estado_sensorPir = LOW;   //Inicia en bajo el estado del sensor
+
+
+void setup()
+{
+	Serial.begin(9600);		//Inicio la comunicacion serial	
+	pinMode(pin_SensorPIR, INPUT);
+	Serial.println("Uso del sensor PIR - detector de movimiento");
+}
+
+void loop()
+{
+
+	estado_sensorPir = digitalRead(pin_SensorPIR);
+
+	if(estado_sensorPir == HIGH)
+	{
+		Serial.println("Se ha detectado movimiento");
+	}
+	else
+	{
+		Serial.println("No se ha detectado movimiento");
+	}
+
+	delay(1000);
+	
+}

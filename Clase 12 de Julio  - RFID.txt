@@ -1,0 +1,54 @@
+ /*
+ Fundacion Kinal 
+ Centro educativo tecnico laboral Kinal
+ Electronica jornada matutina
+ Taller de electronica digital y reparacion de computadoras
+ Alumno: Profe Alejandro
+ Carne: -------
+ Tema: RFID
+ */
+
+//************************LIBRERIAS***************************
+#include <SPI.h>    	//Libreria que me permite hacer uso de la comunicacion SPI
+#include <MFRC522.h>	//Libreria que me permite hacer uso del MFRC522 (lector RFID)
+
+//************************MACROS***************************
+#define Reset_pin   9   //Pin9 conectado al reset del modulo RFID
+#define SlaveS_pin  10  //Pin10 conectado al pin sda del modulo RFID
+#define Serial_baud 9600 //Velocidad de la comunicacion serial
+
+
+//************************CONSTRUCTORES**************************
+MFRC522 lector_RFID(SlaveS_pin, Reset_pin);   //Objeto que me permite utilizar el modulo RFID
+
+
+ void setup()
+ {
+ 	Serial.begin(Serial_baud);  //Iniciamos la comunicacion serial a 9600 baudios
+ 	SPI.begin(); 				//Iniciamos la comunicacion SPI con el modulo RFID
+ 	lector_RFID.PCD_Init();     //Iniciamos el intercambio de informacion entre el arduino y el modulo MFRC522
+ 	Serial.println("Clase 12 de Julio, Uso del modulo RFID");
+ }
+
+ void loop()
+ {
+ 	if(lector_RFID.PICC_IsNewCardPresent())   //Hay alguna tarjeta RFID cerca del modulo RFID?
+ 	{
+ 		if(lector_RFID.PICC_ReadCardSerial())  //Leemos la informacion contenida dentro de la tarjeta RFID
+ 		{
+ 			Serial.print("Identificacion RFID: ");  //Enviamos el texto al monitor serie
+ 			
+ 			//Obtenemos la cantidad de bytes disponibles para leer y los mandamos en formato 
+ 			//hexadecimal al monitor serie
+ 			for(byte i =0; i<lector_RFID.uid.size; i++)
+ 			{
+ 				Serial.print(lector_RFID.uid.uidByte[i] < 0x10 ? " 0 " : " "); 
+ 				Serial.print(lector_RFID.uid.uidByte[i], HEX);
+ 			}
+
+ 			Serial.println();  //Imprimimos un salto de linea
+ 			lector_RFID.PICC_HaltA();  //Terminamos la comunicacion con la tarjeta RFID
+ 		}
+ 	}
+ 	
+ }

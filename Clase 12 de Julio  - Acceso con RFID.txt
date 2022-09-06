@@ -1,0 +1,86 @@
+ /*
+ Fundacion Kinal 
+ Centro educativo tecnico laboral Kinal
+ Electronica jornada matutina
+ Taller de electronica digital y reparacion de computadoras
+ Alumno: Profe Alejandro
+ Carne: -------
+ Tema: Acceso con RFID
+ */
+
+//************************LIBRERIAS***************************
+#include <SPI.h>    	//Libreria que me permite hacer uso de la comunicacion SPI
+#include <MFRC522.h>	//Libreria que me permite hacer uso del MFRC522 (lector RFID)
+
+//************************MACROS***************************
+#define Reset_pin   9   //Pin9 conectado al reset del modulo RFID
+#define SlaveS_pin  10  //Pin10 conectado al pin sda del modulo RFID
+#define Serial_baud 9600 //Velocidad de la comunicacion serial
+
+
+//************************CONSTRUCTORES**************************
+MFRC522 lector_RFID(SlaveS_pin, Reset_pin);   //Objeto que me permite utilizar el modulo RFID
+
+
+byte lectura_actual_RFID[4];    //Array donde almaceno temporalmente el ID de la tarjeta RFID que estoy leyendo
+byte tag_Azul[4] = {0xC9,0x20,0x70,0x48}; //ID que esta almacenado en el llaverito azul. Recuerde que debe cambiarlo segun la informacion de su llavero
+byte tag_Blanco[4] = {0xA3,0x3F,0x20,0x1A};  //ID que esta almacenado en la tarjeta blanca
+
+//************************PROTOTIPOS**************************
+//Funcion que devuelve un true/falso, segun los los arrays que se le pasan de referencia
+bool comparacion_RFID(byte RFID_lectura[], byte tag[]);  
+
+
+ void setup()
+ {
+ 	Serial.begin(Serial_baud);  //Iniciamos la comunicacion serial a 9600 baudios
+ 	SPI.begin(); 				//Iniciamos la comunicacion SPI con el modulo RFID
+ 	lector_RFID.PCD_Init();     //Iniciamos el intercambio de informacion entre el arduino y el modulo MFRC522
+ 	Serial.println("Clase 12 de Julio, Uso del modulo RFID");
+ }
+
+ void loop()
+ {
+ 	if(lector_RFID.PICC_IsNewCardPresent())   //Hay alguna tarjeta RFID cerca del modulo RFID?
+ 	{
+ 		if(lector_RFID.PICC_ReadCardSerial())  //Leemos la informacion contenida dentro de la tarjeta RFID
+ 		{
+ 			Serial.print("Identificacion RFID: ");  //Enviamos el texto al monitor serie
+ 			
+ 			//Obtenemos la cantidad de bytes disponibles para leer y los mandamos en formato 
+ 			//hexadecimal al monitor serie
+ 			for(byte i =0; i<lector_RFID.uid.size; i++)
+ 			{
+ 				//Serial.print(lector_RFID.uid.uidByte[i] < 0x10 ? " 0 " : " "); 
+ 				//Serial.print(lector_RFID.uid.uidByte[i], HEX);
+ 				lectura_actual_RFID[i] = lector_RFID.uid.uidByte[i];
+ 			}
+
+ 			Serial.println();  //Imprimimos un salto de linea
+
+ 			if(comparacion_RFID(lectura_actual_RFID,tag_Azul))
+ 			{
+ 				Serial.println("Acceso permitido");
+ 			}
+ 			else
+ 			{
+ 				Serial.println("Acceso denegado");
+ 			}
+ 			lector_RFID.PICC_HaltA();  //Terminamos la comunicacion con la tarjeta RFID
+ 		}
+ 	}
+ 	
+ }
+
+ //************************FUNCION**************************
+ bool comparacion_RFID(byte RFID_lectura[], byte tag[])
+ {
+ 	//Comparamos los 4 bytes de informacion almacenados y leidos
+ 	//En caso de de ser los 4 iguales, retornamos true
+ 	//Si no, retornamos falso
+ 	if(RFID_lectura[0] != tag[0]) return false;
+ 	if(RFID_lectura[1] != tag[1]) return false;
+ 	if(RFID_lectura[2] != tag[2]) return false;
+ 	if(RFID_lectura[3] != tag[3]) return false;
+ 	return true;
+ }

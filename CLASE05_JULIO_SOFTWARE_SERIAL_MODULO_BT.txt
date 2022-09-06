@@ -1,0 +1,53 @@
+/*
+Fundacion Kinal
+Centro educativo tecnico laboral Kinal
+Electronica jornada vespertina
+Taller de electronica digital y reparacion de computadoras I
+Alumno: Profe. Alejandro
+Carne: ------
+Tema: Comunicacion serial y modulo Bluetooth
+*/
+
+#define rx_SerialBT 7		//Pin7 que se comparta como RX
+#define tx_SerialBT 6		//PIN6 que se comporta como TX
+#define Serial_baud 9600	//La velocidad de la comunicacion serial
+
+#include <SoftwareSerial.h>   //Libreria que me permite emular un puerto serie
+
+
+SoftwareSerial Serial_BT(rx_SerialBT, tx_SerialBT); //Crear un objeto que me permita hacer uso del puerto serie emulado
+
+
+
+void setup()
+{
+	Serial.begin(Serial_baud);    //Inicio la comunicacion serie con la computadora
+	Serial_BT.begin(Serial_baud); //Inicio la comunicacion serie con el modulo BT
+	Serial.println("Uso del puerto serie de Arduino");
+	Serial_BT.println("Uso del puerto serie del modulo BT");
+}
+
+
+void loop()
+{
+	if(Serial_BT.available())
+	{
+		char caracter_de_entrada = Serial_BT.read();  //Guardo el caracter que estoy recibiendo por BT
+		//Serial.print("He recibido el siguiente caracter: ");
+		//Serial.print(caracter_de_entrada);
+		//Serial.println(" por medio del Bluetooth");
+
+		if(caracter_de_entrada == 'a' || caracter_de_entrada=='A')
+		{
+			Serial.println("Enciendo un led");
+		}
+
+		if(caracter_de_entrada == 'b' || caracter_de_entrada == 'B')
+		{
+			Serial.println("Apague un led");
+		}
+
+
+	}
+	
+}
